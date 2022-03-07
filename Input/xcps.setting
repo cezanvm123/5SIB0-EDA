@@ -1,0 +1,372 @@
+import "xcps.machine"
+
+ 
+
+PickPlace.vacuum {
+	Timings {
+		grab = 0.80
+		ungrab = 0.100
+	}
+} 
+PickPlace.yzMotor {
+	Axis Y {
+    Profiles {
+      normal (V = 140, A = 99999999, J = 99999999)
+    }
+    Positions {  
+    	Belt =0
+    	Table = 120
+    }
+  }
+  Axis Z {
+    Profiles {
+      normal (V = 100, A = 99999999, J = 99999999)
+    }
+    Positions {
+    	Above = 0
+		At= 120
+    }
+  }
+} 
+Turner.zMotor {
+	 Axis Z {
+    Profiles {
+      normal (V = 240, A = 99999999, J = 99999999)
+    }
+    Positions {
+    	Above = 0
+		At= 120
+    }
+  }
+}
+Turner.turner {
+	Timings {
+		flip_left = 0.350
+		flip_right = 0.350
+	}
+}
+
+
+
+Turner.gripper {
+	Timings {
+		grab = 0.05
+		ungrab = 0.04
+	}
+}
+
+Switch2.switch {
+	Timings {
+		enable = 0.8
+		disable = 0.8
+	}
+}
+
+Switch3.switch {
+	Timings {
+		enable = 0.30
+		disable = 0.10
+	}
+}
+ 
+
+
+
+Sensor1.sensor{
+	Timings{
+		await = 0.10
+		pass = 0.55
+	}
+}
+
+Sensor2.sensor{
+	Timings{
+		await = 0.1
+		pass = 0.2
+	}
+}
+Sensor3.sensor{
+	Timings{
+		await = 0.1
+		pass = 0.1000
+	}
+}
+Sensor4.sensor{
+	Timings{
+		await = 0.10
+		pass = 0.1
+	}
+}
+Sensor5.sensor{
+	Timings{
+		await = 0.03
+		pass = 0.50
+	}
+}
+Sensor8.sensor{
+	Timings{
+		await = 0.2
+		pass = 0.1
+	}
+}
+Sensor9.sensor{
+	Timings{
+		await = 0.01
+		pass = 0.015
+	}
+} 
+
+Sensor20.sensor{
+	Timings{
+		await = 0.1
+		pass = 0.10
+	}
+}
+Sensor21.sensor{
+	Timings{
+		await = 0.1
+		pass = 0.10
+	}
+}
+
+Stopper1.stopper {
+	Timings {
+		enable = 0.03
+		disable = 0.03
+	}
+}
+Stopper2.stopper {
+	Timings {
+		enable = 0.03
+		disable =0.03
+	}
+}
+Stopper3.stopper {
+	Timings {
+		enable = 0.03
+		disable = 0.0300
+	}
+}
+Stopper4.stopper {
+	Timings {
+		enable = 0.0300
+		disable = 0.0300
+	}
+}
+Stopper5.stopper {
+	Timings {
+		enable = 0.030
+		disable = 0.030
+	}
+}
+
+Belt1.motor{
+	Timings {
+		enable = 0.010
+		disable = 0.010
+	}
+}
+Belt1.beltArea{
+	Timings {
+		traverse = 1.8
+	}
+}
+
+Belt2.motor{
+	Timings {
+		enable = 0.010
+		disable = 0.010
+	}
+}
+Belt2.beltArea{
+	Timings {
+		traverse = 0.5
+	}
+}
+Belt2_2.beltArea{
+	Timings {
+		traverse = 0.6
+	}
+}
+Belt2_3.beltArea{
+	Timings {
+		traverse =  0.6
+	}
+}
+Belt2_4.beltArea{
+	Timings {
+		traverse =  1
+	}
+}
+Belt2_5.beltArea{
+	Timings {
+		traverse =  0.5
+	}
+}
+
+Belt2_6.beltArea{
+	Timings {
+		traverse =  2.5
+	}
+}
+Belt3.beltArea{
+	Timings {
+		traverse =  0.25
+	}
+}
+Belt3_2.beltArea{
+	Timings {
+		traverse =  3
+	}
+}
+Belt4.beltArea{
+	Timings {
+		traverse =  2.2
+	}
+}
+Belt5.beltArea{
+	Timings {
+		traverse =  2
+	}
+}
+
+
+Belt3.motor{
+	Timings {
+		enable = 0.01000
+		disable = 0.010000
+	}
+}
+
+Belt4.motor{
+	Timings {
+		enable = 0.01
+		disable =0.010000
+	}
+}
+Belt5.motor{
+	Timings {
+		enable = 0.01
+		disable =0.010000
+	}
+}
+
+IndexingTable1.motor{
+	Timings {
+		enable = 0.1
+		disable = 0.1
+	}
+}
+IndexingTable1.aligner{
+	Timings {
+		alignWithBelt = 0.6
+		alignWithOther =0.6
+	}
+}
+IndexingTable2.motor{
+	Timings {
+		enable = 0.1
+		disable = 0.1
+	}
+}
+IndexingTable2.aligner{
+	Timings {
+		alignWithBelt = 0.6
+		alignWithOther =0.6
+	}
+}
+
+Arm1.Clamp{
+	Timings{
+		grab = 0.2
+		ungrab = 0.2
+	}
+}
+Arm1.XYZ{
+	Axis X { 
+    Profiles {
+      normal (V = 140, A = 9999999999, J = 9999999999)
+    }
+    Positions { 
+    	Home = 0
+    	Belt1 = 105
+    	Stor1 = 268
+    	Stor2 = 318 
+    	Stor3 = 368 
+    	Stor4 = 418
+    	Stor5 = 468
+    }
+  }
+  Axis Y {
+    Profiles {
+      normal (V = 140, A = 9999999999, J = 9999999999)
+    }
+    Positions { 
+    	Home = 0
+    	Belt1 = 168
+    	Stor1 = 480
+    	Stor2 = 430 
+    	Stor3 = 380 
+    	Stor4 = 330
+    	Stor5 = 280
+    }
+  }
+  Axis Z {
+    Profiles {
+      normal (V = 140, A = 9999999999, J = 9999999999)
+    }
+    Positions {
+		Home = 0 
+		AtBelt= 180
+		Storage = 306
+    }
+  }
+}
+
+Arm2.Clamp{
+	Timings{
+		grab = 0.2
+		ungrab = 0.2
+	}
+}
+Arm2.XYZ{
+	Axis X { 
+    Profiles {
+      normal (V = 140, A = 99999999, J = 99999999)
+    }
+    Positions { 
+    	Home = 0
+    	Stor1 = 268
+    	Stor2 = 318 
+    	Stor3 = 368 
+    	Stor4 = 418
+    	Stor5 = 468
+    	Belt5 = 500
+    }
+  }
+  Axis Y {
+    Profiles {
+      normal (V = 140, A = 99999999, J = 99999999)
+    }
+    Positions { 
+    	Home = 0 
+    	Stor1 = 480
+    	Stor2 = 430 
+    	Stor3 = 380 
+    	Stor4 = 330
+    	Stor5 = 280
+    	Belt5 = 105
+    }
+  }
+  Axis Z {
+    Profiles {
+      normal (V = 140, A = 99999999, J = 99999999)
+    }
+    Positions {
+		Home = 0
+		AtBelt= 180 
+		Storage = 306
+    }
+  }
+}
+ 
