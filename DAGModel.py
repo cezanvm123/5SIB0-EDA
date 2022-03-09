@@ -40,7 +40,7 @@ class DAGModel :
             split1 = line.split("->")
             N1 = split1[0].replace("Node",'')
             N2 = split1[1].replace("Node",'')
-            self.nodes[int(N1)-1].addDependency(int(N2))
+            self.nodes[int(N2)-1].addDependency(int(N1))
 
     def getMovingResources(self) :
         return self.movingResources
@@ -73,5 +73,7 @@ class Node :
     nr = 0
     moving = False
     duration = 0
+    startTime = 0
+    endTime = 0
     dependencies = []
     line = ""
