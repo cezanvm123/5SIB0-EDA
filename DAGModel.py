@@ -9,10 +9,12 @@ class DAGModel :
 
         for l in f: 
             self.extractMovingResources(l)
+            #maybe do this later when the settings file has been parsed
             self.extractNodes(l)
             self.extractDependency(l)
 
         print(self.movingResources)
+
 
 
     def extractMovingResources(self, line):
@@ -40,6 +42,9 @@ class DAGModel :
             N2 = split1[1].replace("Node",'')
             self.nodes[int(N1)-1].addDependency(int(N2))
 
+    def getMovingResources(self) :
+        return self.movingResources
+
     nodes = []
     movingResources = []
     
@@ -53,6 +58,10 @@ class Node :
 
         if "move" in line : 
             self.moving = True
+        else :
+            split = line.split(',')
+            self.duration = float(split[1]) 
+            
     
 
     def addDependency (self, nr):

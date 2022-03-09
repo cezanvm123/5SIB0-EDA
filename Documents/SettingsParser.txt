@@ -1,0 +1,151 @@
+!!This is some scrap paper implementation might be different!! 
+
+The parser receives a list of moving resources
+    - These resources are the only ones of importance
+
+1. The settings file is scanned by line until one of the resources is found
+2. Within these resources one or multiple Axis objects are located 
+    - So the file is further scanned until "Axis" is found 
+- When found the direction is saved 
+    - Within the Axis there are two objects: Profiles and Positions
+        - Within Profiles only the velocity is extracted and saved
+        - Positions are stored in a list by name and value
+
+
+Open and closed brakets are counted
+
+
+
+Searching states: GLOBAL, AXIS, P_OR_P, VELOCITY, POSITION
+
+
+
+
+
+Example 
+
+1. PickPlace.vacuum {
+2. 	Timings {
+3. 		grab = 0.80
+4. 		ungrab = 0.100
+5. 	}
+6. } 
+7. PickPlace.yzMotor {
+8. 	Axis Y {
+9.     Profiles {
+10.       normal (V = 140, A = 99999999, J = 99999999)
+11.     }
+12.     Positions {  
+13.     	Belt =0
+14.     	Table = 120
+15.     }
+16.   }
+17.   Axis Z {
+18.     Profiles {
+19.       normal (V = 100, A = 99999999, J = 99999999)
+20.     }
+21.     Positions {
+22.     	Above = 0
+23. 		At= 120
+24.     }
+25.   }
+26. } 
+
+---------------------------Failed example:--------------------------------------- 
+
+Line:1 PickPlace is recognized 
+    - Store Check if a ResourceObject exists with this name
+        - It does not, so creates and stores
+    - Bracket++
+    - Program now goes into a deeper searching mode (counting brackets and such)
+Line:2 
+    - line does not contain "Axis" 
+    - Bracket++ 
+Line:3 
+    - line does not contain "Axis"
+Line:4
+    - line does not contain "Axis"
+Line:5
+    - line does not contain "Axis"
+    - Bracket--
+        - brackets != 0
+Line:6
+    - line does not contain "Axis"
+    - Bracket--
+        - brackets == 0
+            - Object is finished remove all stored values 
+            - Go back to global search
+################################### END #####################################
+
+-------------------------------Found example:-----------------------------------
+
+Line:7 PickPlace is recognized 
+    - Store Check if a ResourceObject exists with this name
+        - It does, so object is retreived
+    - Bracket++
+    - Program now goes into a deeper searching mode (counting brackets and such)
+Line:8 
+    - Line contains "Axis"
+    - Axis object is created and stored in resource object
+    - bracket++
+    - axisBracket++
+    - Program now expects "Profiles" or "Positions" 
+Line:9
+    - Line contains "Profiles"
+    - bracket++
+    - axisBracket++
+    - Program knows the next line contains the velocity 
+Line:10
+    - line.replace('(', '')
+    - line.replace(')', '')
+    - line.split()
+    - loop through the split array 
+        - when encountering 'V'
+        - and the next one is a '='
+        - the one after that is the velocity
+    - Store velocity in Axis object
+    - Velocity found go back to "Profiles" or "Positions" search
+Line:11 
+    - line does not contain "Profiles" or "Positions"
+    - brackets--
+        - brackets != 0
+    - axisBracket--
+        - axisBracket !=0
+Line:12
+    - Line contains "Positions"
+    - Bracket++
+    - axisBracket++
+    - Program now expects Positions until "}"
+Line:13
+    - line.split('=')
+    - turncate both strings 
+    - Create new Position object 
+    - pos.name = split[0]
+    - pos.value = float(split[1])
+    - Store position object in Axis
+Line:14
+    - Same as 13 
+Line:15
+    - line contains "}"
+    - All positions stored
+    - bracket--
+        - brackets != 0
+    - axisBracket--
+        - axisBracket !=0
+
+Line:16
+    - axisBracket--
+        - axisBracket == 0
+            - Axis completed now going back to Axis search
+Line:17
+    - Line contains "Axis"
+    - Repeat line8 -> line16
+. 
+. 
+.
+Line:26
+    - bracket--
+        - brackets == 0 
+            Object is finished going back to global search 
+
+################################### END #####################################
