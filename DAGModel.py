@@ -46,6 +46,7 @@ class DAGModel :
         return self.movingResources
 
     nodes = []
+    routes = []
     movingResources = []
     
 
@@ -77,3 +78,8 @@ class Node :
     endTime = 0
     dependencies = []
     line = ""
+
+
+class Route : 
+
+    nodes = []

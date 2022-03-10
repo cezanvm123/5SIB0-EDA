@@ -9,7 +9,11 @@ class Model:
 
 
     def updateResourceByName(self, resource) : 
-        print("updateResourceByName TODO")
+        for r in self.resources :
+            if r.getName() == resource.getName() :
+                i = self.resources.index(r)
+                self.resources[i] = resource
+        
 
     def getResourceByName(self, name):
         for r in self.resources :
@@ -55,11 +59,21 @@ class Axis:
     def setVelocity(self, v): 
         self.velocity = v
 
+    def addPosition(self, name, val) :
+        pos = Position(name, val)
+        self.positions.append(pos)
+
     type = AxisType.X
     velocity = 0.0
     positions = []
 
 class Position: 
+    
+    def __init__(self, name, value) :
+        self.name = name
+        self.value = value
+
+    
     name = ""
     value = 0.0
 

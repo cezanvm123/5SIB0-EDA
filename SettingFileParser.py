@@ -1,6 +1,7 @@
 from enum import Enum
 from pickle import GLOBAL
 from Model import Axis, AxisType, Resource, Model
+import string
 
 class SearchState(Enum): 
     GLOBAL = 1
@@ -13,10 +14,12 @@ class SearchState(Enum):
 
 
 def parseSettingFile(path, movingResources):
-    
+    print("Parsing setting file")
     model = Model()
     running = False
     state = SearchState.GLOBAL
+
+    DEBUG = True
 
     # temporary objects
     tempResource = None
@@ -28,20 +31,34 @@ def parseSettingFile(path, movingResources):
 
     file = open(path, "r")
 
+    def setState(s) :
+        nonlocal state
+        nonlocal DEBUG
+        if DEBUG :
+            print("State change to: ", end = '')
+            print(s)
+        
+        state = s
 
     def globalSearch(line) : 
+        nonlocal brackets
+        nonlocal state
+        nonlocal tempResource
+
         for word in movingResources : 
             if word in line : 
-                print("succes")
                 # global search over 
                 tempResource = model.getResourceByName(word)
                 brackets+=1
-                state = SearchState.AXIS
+                setState(SearchState.AXIS)
 
 
     def axisSearch(line) :
+        nonlocal aBrackets
+        nonlocal state
+        nonlocal tempAxis
+
         if "Axis" in line : 
-            print("Axis found")
             if 'X' in line : 
                 tempAxis = Axis(AxisType.X)
             elif 'Y' in line :
@@ -50,49 +67,80 @@ def parseSettingFile(path, movingResources):
                 tempAxis = Axis(AxisType.Z)
             
             aBrackets+=1
-            state = SearchState.P_OR_P
+            setState(SearchState.P_OR_P)
             
 
     def ppSearch(line) : 
+        nonlocal state
+
         if "Profiles" in line : 
-            state = SearchState.VELOCITY
+            setState(SearchState.VELOCITY)
         elif "Positions" in line : 
-            state = SearchState.POSITION
+            setState(SearchState.POSITION)
 
 
     def velocitySearch(line) :
+        nonlocal tempAxis
+
         line = line.replace('(', '')
         line = line.replace(')', '')
+        line = line.replace(',', '')
         split = line.split()
-
-        for i in range(split.count) : 
+        
+        i = 0
+        while i < len(split):
             if split[i] == "V": 
                 if split[i+1] == "=":
                     tempAxis.setVelocity(float(split[i+2]))
+                    setState(SearchState.P_OR_P)
+            i+=1
+        
 
-        print()
+    def positionSearch(line) : 
+        nonlocal tempAxis
 
+        if '}' in line :
+            setState(SearchState.P_OR_P)
+            return
 
-    def bracketManager(line) : 
+        split = line.split("=")
+        name = split[0].translate({ord(c): None for c in string.whitespace})
+
+        tempAxis.addPosition(name, float(split[1]))
+
+    def bracketManager(line) :
+        nonlocal brackets
+        nonlocal state
+        nonlocal tempResource
+
         if '{' in line : 
             brackets+=1
         elif '}' in line :
             brackets-=1
             
             if brackets == 0 :
-                state = SearchState.GLOBAL
+                setState(SearchState.GLOBAL)
                 tempResource = None
 
     def abracketManager(line) : 
+        nonlocal state
+        nonlocal aBrackets
+        nonlocal tempResource
+        nonlocal tempAxis
+
         if '{' in line : 
-            abrackets+=1
+            aBrackets+=1
         elif '}' in line :
-            abrackets-=1
+            aBrackets-=1
+
+        print("axis brackets: " + str(aBrackets))
+
+        if aBrackets == 0 :
+            setState(SearchState.AXIS)
+            tempResource.addAxis(tempAxis)
+            model.updateResourceByName(tempResource)
+            tempAxis = None
             
-            if abrackets == 0 :
-                state = SearchState.AXIS
-                tempResource.addAxis(tempAxis)
-                tempResource = None
 
 
     for l in file: 
@@ -111,23 +159,21 @@ def parseSettingFile(path, movingResources):
             ppSearch(l)
             bracketManager(l) 
             abracketManager(l)
-            print("P_OR_P")
 
         elif state == SearchState.VELOCITY : 
             velocitySearch(l)
             bracketManager(l) 
             abracketManager(l)
-            print("VELOCITY")
 
         elif state == SearchState.POSITION : 
+            positionSearch(l)
             bracketManager(l) 
             abracketManager(l)
-            print("POSITION")
 
               
 
 
-
+    print("done")
     return model
 
 
