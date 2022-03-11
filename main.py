@@ -5,6 +5,7 @@ import SettingFileParser
 
 
 dag = DAGModel("Input\DAG.txt")
-#model = Model(r"Input\xcps.setting", dag.getMovingResources())
 model = SettingFileParser.parseSettingFile(r"Input\xcps.setting", dag.getMovingResources())
+
+#calculate node delays
 print("done")

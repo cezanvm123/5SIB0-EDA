@@ -13,6 +13,7 @@ class DAGModel :
             self.extractNodes(l)
             self.extractDependency(l)
 
+        print("DAG parse done")
         print(self.movingResources)
 
 
@@ -35,6 +36,7 @@ class DAGModel :
 
     
     #line input e.g: Node42->Node69
+    #currently the dependencies are just stored and no structure is created
     def extractDependency(self, line): 
         if "->" in line :
             split1 = line.split("->")

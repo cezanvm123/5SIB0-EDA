@@ -19,7 +19,7 @@ def parseSettingFile(path, movingResources):
     running = False
     state = SearchState.GLOBAL
 
-    DEBUG = True
+    DEBUG = False
 
     # temporary objects
     tempResource = None
@@ -133,8 +133,6 @@ def parseSettingFile(path, movingResources):
         elif '}' in line :
             aBrackets-=1
 
-        print("axis brackets: " + str(aBrackets))
-
         if aBrackets == 0 :
             setState(SearchState.AXIS)
             tempResource.addAxis(tempAxis)
@@ -173,11 +171,11 @@ def parseSettingFile(path, movingResources):
               
 
 
-    print("done")
+    print("Setting parse done")
     return model
 
 
 
     
 #test 
-parseSettingFile(r"Input\xcps.setting",['Arm1', 'Turner', 'PickPlace', 'Arm2'] )
+#parseSettingFile(r"Input\xcps.setting",['Arm1', 'Turner', 'PickPlace', 'Arm2'] )
