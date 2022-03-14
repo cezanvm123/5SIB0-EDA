@@ -42,8 +42,8 @@ class DAGModel :
             split1 = line.split("->")
             N1 = split1[0].replace("Node",'')
             N2 = split1[1].replace("Node",'')
-            temp = self.getNodeByNr(int(N1))
-            self.nodes[int(N2)-1].addDependency(temp)
+            temp = self.getNodeByNr(int(N2))
+            self.nodes[int(N1)-1].addDependency(temp)
 
 
     def getNodeByNr(self, nr) :
