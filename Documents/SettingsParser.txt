@@ -1,9 +1,9 @@
-!!This is some scrap paper implementation might be different!! 
+!!This is some scrap paper, implementation might be different!! 
 
 The parser receives a list of moving resources
     - These resources are the only ones of importance
 
-1. The settings file is scanned by line until one of the resources is found
+1. The settings file is scanned line by line until one of the resources is found
 2. Within these resources one or multiple Axis objects are located 
     - So the file is further scanned until "Axis" is found 
 - When found the direction is saved 

@@ -36,13 +36,20 @@ class DAGModel :
 
     
     #line input e.g: Node42->Node69
-    #currently the dependencies are just stored and no structure is created
+    
     def extractDependency(self, line): 
         if "->" in line :
             split1 = line.split("->")
             N1 = split1[0].replace("Node",'')
             N2 = split1[1].replace("Node",'')
-            self.nodes[int(N2)-1].addDependency(int(N1))
+            temp = self.getNodeByNr(int(N1))
+            self.nodes[int(N2)-1].addDependency(temp)
+
+
+    def getNodeByNr(self, nr) :
+        for n in self.nodes :
+            if n.nr == nr :
+                return n
 
     def getMovingResources(self) :
         return self.movingResources
@@ -64,8 +71,14 @@ class Node :
         else :
             split = line.split(',')
             self.duration = float(split[1]) 
-            
     
+        self.setNr(line)
+            
+    def setNr(self, l) :
+        split = l.split(',')
+        num = split[0].replace("Node",'')
+        self.nr = int(num)
+
 
     def addDependency (self, nr):
         self.dependencies.append(nr)
