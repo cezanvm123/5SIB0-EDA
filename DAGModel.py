@@ -17,7 +17,7 @@ class DAGModel :
         print(self.movingResources)
 
 
-
+    # this is needed for the settings file parse to know which resources to extract
     def extractMovingResources(self, line):
         
         if "move" in line: 
@@ -29,7 +29,7 @@ class DAGModel :
                 self.movingResources.append(movingResource)
     
 
-
+    # init the nodes list 
     def extractNodes(self, line) : 
         if "Node" in line and "->" not in line : 
             self.nodes.append(Node(line))
@@ -42,8 +42,10 @@ class DAGModel :
             split1 = line.split("->")
             N1 = split1[0].replace("Node",'')
             N2 = split1[1].replace("Node",'')
-            temp = self.getNodeByNr(int(N2))
-            self.nodes[int(N1)-1].addDependency(temp)
+
+            self.nodes[int(N1)-1].addDependencyBelow(self.getNodeByNr(int(N2)))
+            self.nodes[int(N2)-1].addDependencyAbove(self.getNodeByNr(int(N1)))
+
 
 
     def getNodeByNr(self, nr) :
@@ -51,6 +53,7 @@ class DAGModel :
             if n.nr == nr :
                 return n
 
+    # if a resource is moving it does not yet contain its duration
     def getMovingResources(self) :
         return self.movingResources
 
@@ -64,7 +67,8 @@ class Node :
 
     def __init__(self, line) :
         self.line = line
-        self.dependencies = []
+        self.dependenciesBelow = []
+        self.dependenciesAbove = []
 
         if "move" in line : 
             self.moving = True
@@ -80,8 +84,12 @@ class Node :
         self.nr = int(num)
 
 
-    def addDependency (self, nr):
-        self.dependencies.append(nr)
+    def addDependencyBelow (self, nr):
+        self.dependenciesBelow.append(nr)
+
+    
+    def addDependencyAbove (self, nr):
+        self.dependenciesAbove.append(nr)
 
     def test(self, str):
         self.line = str
@@ -91,8 +99,15 @@ class Node :
     duration = 0
     startTime = 0
     endTime = 0
-    dependencies = []
+    dependenciesBelow = [] #Below
+    dependenciesAbove = [] #Above
     line = ""
+
+
+    
+
+
+
 
 
 class Route : 
