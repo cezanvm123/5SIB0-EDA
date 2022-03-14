@@ -17,6 +17,44 @@ class DAGModel :
         print(self.movingResources)
 
 
+    def calcMovingNodeDurations(self, settingModel) :
+        for n in self.nodes :
+            if n.moving == False :
+                continue
+
+            resource = settingModel.getResourceByLine(n.line)
+            duration = 0
+
+            # knowing the layout of the dag line the first two string splits are of no interest as shown below
+
+            # |  0   |                              1                       |     2    |    3     |                       
+            # Node114,move Arm1.XYZ to Before_Belt1 with speed profile normal,Arm1.X=263,Arm1.Y=200
+
+            split = n.line.split(',') 
+            i = 2
+            while i < len(split):
+                if 'X' in split[i]: 
+                    s = split[i].split('=')
+                    distance = int(s[1]) # distance the X axis moves in mm
+                    duration += distance / resource.getXVelocity()
+                
+                elif 'Y' in split[i]: 
+                    s = split[i].split('=')
+                    distance = int(s[1]) # distance the Y axis moves in mm
+                    duration += distance / resource.getYVelocity()
+
+                elif 'Z' in split[i]: 
+                    s = split[i].split('=')
+                    distance = int(s[1]) # distance the Z axis moves in mm
+                    duration += distance / resource.getZVelocity()
+
+
+                i+=1
+            
+            n.duration = duration
+        
+
+
     # this is needed for the settings file parse to know which resources to extract
     def extractMovingResources(self, line):
         
@@ -58,7 +96,7 @@ class DAGModel :
         return self.movingResources
 
     nodes = []
-    routes = []
+    routes = [] #empty
     movingResources = []
     
 
@@ -99,8 +137,8 @@ class Node :
     duration = 0
     startTime = 0
     endTime = 0
-    dependenciesBelow = [] #Below
-    dependenciesAbove = [] #Above
+    dependenciesBelow = [] #Outgoing arrows
+    dependenciesAbove = [] #Incomming arrows
     line = ""
 
 

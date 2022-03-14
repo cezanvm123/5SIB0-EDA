@@ -23,6 +23,11 @@ class Model:
         r = Resource(name)
         self.resources.append(r)
         return r
+
+    def getResourceByLine(self, l) :
+        for r in self.resources :
+            if r.getName() in l :
+                return r
         
     resources = []
     
@@ -35,6 +40,21 @@ class Resource:
 
     def addAxis(self, axis) : 
         self.Axes.append(axis)  
+
+    def getXVelocity(self): 
+        for a in self.Axes : 
+            if a.type == AxisType.X :
+                return a.velocity
+    
+    def getYVelocity(self): 
+        for a in self.Axes : 
+            if a.type == AxisType.Y :
+                return a.velocity
+
+    def getZVelocity(self): 
+        for a in self.Axes : 
+            if a.type == AxisType.Z :
+                return a.velocity
 
     def getName(self) : 
         return self.name
