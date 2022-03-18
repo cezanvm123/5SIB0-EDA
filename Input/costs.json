@@ -1,0 +1,63 @@
+{
+    "resources" : [
+        {
+            "name" : "Turner",
+            "axes" : [
+                {
+                    "axis" : "Z",
+                    "costCoefficient" : 0.2 
+                }
+            ]
+        }, 
+
+        {
+            "name" : "PickPlace",
+            "axes" : [
+                {
+                    "axis" : "Y",
+                    "costCoefficient" : 0.25
+                },
+                {
+                    "axis" : "Z",
+                    "costCoefficient" : 0.23 
+                }
+            ]
+        }, 
+
+        {
+            "name" : "Arm1",
+            "axes" : [
+                {
+                    "axis" : "X",
+                    "costCoefficient" : 0.3
+                },
+                {
+                    "axis" : "Y",
+                    "costCoefficient" : 0.25 
+                },
+                {
+                    "axis" : "Z",
+                    "costCoefficient" : 0.25 
+                }
+            ]
+        }, 
+
+        {
+            "name" : "Arm2",
+            "axes" : [
+                {
+                    "axis" : "X",
+                    "costCoefficient" : 0.3
+                },
+                {
+                    "axis" : "Y",
+                    "costCoefficient" : 0.25 
+                },
+                {
+                    "axis" : "Z",
+                    "costCoefficient" : 0.25 
+                }
+            ]
+        }
+    ]
+}

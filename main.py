@@ -7,10 +7,13 @@ import SettingFileParser
 #numpy probably for math 
 
 dag = DAGModel("Input\DAG.txt")
-model = SettingFileParser.parseSettingFile(r"Input\xcps.setting", dag.getMovingResources())
+model = SettingFileParser.parseSettingFile(r"Input\xcps.setting", dag.getMovingResources(), "Input/costs.json")
 
-# this calculates the durations of the moving nodes, this can be done everytime the velocities are changed in the settingmodel
+# This calculates the durations of the moving nodes, this can be done everytime the velocities are changed in the settingmodel\
+# It is a seperate function call as it needs the settingmodel to be initialized.
 dag.calcMovingNodeDurations(model)
+#dag.retreiveRoutes()
 
-#calculate node delays
+print("Machine cost is: %s euro" %(model.getMachineCost()))
+
 print("done")

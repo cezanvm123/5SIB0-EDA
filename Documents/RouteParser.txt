@@ -1,0 +1,7 @@
+For each node with len(dependencyAbove) == 0 (start node) 
+     - create a route object
+     - add node to place 0 in de list 
+     For each node in depedencyBelow
+        - add node to route object 
+        - if node has a depedencyBelow 
+            - Deepcopy route object and call function recursively 

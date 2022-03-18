@@ -8,7 +8,7 @@ class Model:
         self.resources = []
 
 
-    def updateResourceByName(self, resource) : 
+    def updateResource(self, resource) : 
         for r in self.resources :
             if r.getName() == resource.getName() :
                 i = self.resources.index(r)
@@ -28,6 +28,16 @@ class Model:
         for r in self.resources :
             if r.getName() in l :
                 return r
+
+
+    def getMachineCost(self) :
+        c = 0
+        for r in self.resources : 
+            for a in r.axes : 
+                c += (a.velocity * a.velocity) * a.costCoefficient
+        
+        return c
+
         
     resources = []
     
@@ -36,23 +46,23 @@ class Resource:
 
     def __init__(self, name) :
         self.name = name
-        self.Axes = []
+        self.axes = []
 
     def addAxis(self, axis) : 
-        self.Axes.append(axis)  
+        self.axes.append(axis)  
 
     def getXVelocity(self): 
-        for a in self.Axes : 
+        for a in self.axes : 
             if a.type == AxisType.X :
                 return a.velocity
     
     def getYVelocity(self): 
-        for a in self.Axes : 
+        for a in self.axes : 
             if a.type == AxisType.Y :
                 return a.velocity
 
     def getZVelocity(self): 
-        for a in self.Axes : 
+        for a in self.axes : 
             if a.type == AxisType.Z :
                 return a.velocity
 
@@ -60,13 +70,29 @@ class Resource:
         return self.name
 
     name = ""
-    Axes = []
+    axes = []
     editable = False
 
 class AxisType(Enum): 
     X = 1
     Y = 2
     Z = 3
+
+    def getString(self, a) :
+        if a == self.X :
+            return 'X'
+        elif a == self.Y :
+            return 'Y'
+        elif a == self.Z : 
+            return 'Z'
+    
+    def getTypeByString(self, s) :
+        if s == "X" or s == "x" :
+            return self.X
+        elif s == "Y" or s == "y" :
+            return self.Y
+        elif s == "Z" or s == "z" :
+            return self.Z
 
 
 
@@ -86,6 +112,7 @@ class Axis:
     type = AxisType.X
     velocity = 0.0
     positions = []
+    costCoefficient = 0.0
 
 class Position: 
     

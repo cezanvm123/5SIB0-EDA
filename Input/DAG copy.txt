@@ -5,7 +5,7 @@ Node4,0.01
 Node5,0.01
 Node6,0.01
 Node7,0.01
-
+Node8,0.01
 
 
 DEPENDENCIES:
@@ -13,7 +13,8 @@ DEPENDENCIES:
 Node1->Node5
 Node2->Node4
 Node3->Node2
-Node3->Node3
 Node5->Node6
 Node5->Node7
 Node6->Node7
+Node6->Node8
+

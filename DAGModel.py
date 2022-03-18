@@ -1,4 +1,6 @@
 
+import copy
+
 
 class DAGModel :
 
@@ -95,10 +97,91 @@ class DAGModel :
     def getMovingResources(self) :
         return self.movingResources
 
+
+
+
+
+    def retreiveRoutes(self) : 
+
+
+        for n in self.nodes :
+            if len(n.dependenciesAbove) == 0 : 
+                self.startPoints.append(n)
+            elif len(n.dependenciesBelow) ==0 : 
+                self.endPoints.append(n)
+
+        for n in self.startPoints :
+            r = Route(0,False)
+            self.constructRoute(n, r)
+
+
+        
+
+    def constructRoute(self,node,route) :
+        
+        route.addNode(node)
+
+        # More depedencies below spawn mode routes
+        i = 1 
+        while i < len(node.dependenciesBelow):
+            self.constructRoute(node.dependenciesBelow[i], Route(route, True))
+            i+=1
+
+
+        if len(node.dependenciesBelow) >= 1 :
+            self.constructRoute(node.dependenciesBelow[0], route)
+
+        elif len(node.dependenciesBelow) == 0 : #reached the end leaf
+            self.routes.append(route)
+            
+            if len(self.routes) % 10000 ==0 :
+                print(len(self.routes))
+            # for n in route.nodes :
+            #     print(n.nr, end = ', ')
+            # print()
+
+
+
+
+
+
+
+
+
+
     nodes = []
     routes = [] #empty
+    startPoints = []
+    endPoints = []
     movingResources = []
     
+
+
+
+class Route : 
+
+    def __init__(self, i, list) :
+        if list == False :
+            self.nodes = []
+        else : 
+            self.initList(i)
+    
+    def initList (self, r) : 
+        self.nodes = []
+        for n in r.nodes: 
+            self.nodes.append(n)
+
+    def addNode(self, n) :
+        self.nodes.append(n)
+    
+    def calculateValues(self) : 
+        print("Calculating biep bop")
+
+    duration = 0
+    movingPercentage = 0
+
+    nodes = []
+
 
 
 class Node :
@@ -143,11 +226,3 @@ class Node :
 
 
     
-
-
-
-
-
-class Route : 
-
-    nodes = []

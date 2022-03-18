@@ -1,7 +1,9 @@
 from enum import Enum
+from operator import mod
 from pickle import GLOBAL
 from Model import Axis, AxisType, Resource, Model
 import string
+import json
 
 class SearchState(Enum): 
     GLOBAL = 1
@@ -13,7 +15,7 @@ class SearchState(Enum):
 
 
 
-def parseSettingFile(path, movingResources):
+def parseSettingFile(path, movingResources, CCPath):
     print("Parsing setting file")
     model = Model()
     running = False
@@ -30,6 +32,7 @@ def parseSettingFile(path, movingResources):
     aBrackets = 0 #axis specific brackets  
 
     file = open(path, "r")
+
 
     def setState(s) :
         nonlocal state
@@ -136,9 +139,26 @@ def parseSettingFile(path, movingResources):
         if aBrackets == 0 :
             setState(SearchState.AXIS)
             tempResource.addAxis(tempAxis)
-            model.updateResourceByName(tempResource)
+            model.updateResource(tempResource)
             tempAxis = None
-            
+
+    def retreiveCosts() : 
+        with open(CCPath) as jsonFile:
+            jsonObject = json.load(jsonFile)
+            jsonFile.close()
+        
+        resources = jsonObject['resources']
+        for i in resources :
+            name = i['name'] 
+            r = model.getResourceByName(name)
+            jsonAxes = i['axes']
+            for ar in r.axes :
+                for ja in jsonAxes : 
+                    axisType = ja['axis']
+                    if ar.type == ar.type.getTypeByString(axisType) : 
+                        cc = ja['costCoefficient']
+                        ar.costCoefficient = cc
+            model.updateResource(r)
 
 
     for l in file: 
@@ -167,6 +187,8 @@ def parseSettingFile(path, movingResources):
             positionSearch(l)
             bracketManager(l) 
             abracketManager(l)
+    
+    retreiveCosts()
 
               
 
