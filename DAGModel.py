@@ -213,18 +213,11 @@ class Node :
         self.dependenciesAbove.append(nr)
 
 # used when scheduling
-    def isDone(self, t):
-        if self.finished == True :
-            return True
-        if self.endTime == t: 
-            self.finished = True
-            return True
-        
-        return False
-
     def fire(self,t) : 
+        self.fired = True
         self.startTime = t
-        self.endTime = t + self.duration
+        self.endTime = t + self.duration*1000
+        print("nr: %s  end time: %s" %(self.nr, self.endTime))
 
 
     nr = 0
@@ -237,7 +230,8 @@ class Node :
     duration = 0
     startTime = 0
     endTime = 0
-    finished = False
+
+    fired = False
 
 
     

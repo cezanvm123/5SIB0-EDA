@@ -1,6 +1,7 @@
 import imp
 from DAGModel import DAGModel
 from Model import Model
+from Scheduler import Scheduler
 import SettingFileParser
 
 
@@ -15,5 +16,8 @@ dag.calcMovingNodeDurations(model)
 #dag.retreiveRoutes()
 
 print("Machine cost is: %s euro" %(model.getMachineCost()))
+
+
+schedule = Scheduler(dag)
 
 print("done")
