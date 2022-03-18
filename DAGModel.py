@@ -102,8 +102,7 @@ class DAGModel :
 
 
     def retreiveRoutes(self) : 
-
-
+        
         for n in self.nodes :
             if len(n.dependenciesAbove) == 0 : 
                 self.startPoints.append(n)
