@@ -144,9 +144,13 @@ class DAGModel :
             #     print(n.nr, end = ', ')
             # print()
 
-
+    def resetTimes(self) : 
+        for n in self.nodes : 
+            n.startTime = 0
+            n.endTime = 0
 
     def determineMakespan(self) : 
+        self.resetTimes()
         makespan = 0
         for n in self.nodes : 
             if len(n.dependenciesAbove) == 0 :
@@ -162,8 +166,6 @@ class DAGModel :
 
                 if n.endTime == 0 :# checks if one of the nodes isn't done yet if so we want another run
                     running = True
-
-
 
                 fin = True
                 t = 0

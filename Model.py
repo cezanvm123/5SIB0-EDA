@@ -38,6 +38,20 @@ class Model:
         
         return c
 
+    def getVelocityVector(self) :
+        l = []
+        for r in self.resources : 
+            for a in r.axes : 
+                l.append(a.velocity)
+        return l
+
+    def setVelocityVector(self, v) : 
+        i = 0
+        for r in self.resources : 
+            for a in r.axes : 
+                a.setVelocity(v[i])
+                i+=1
+        
         
     resources = []
     
