@@ -58,6 +58,10 @@ class DAGModel :
         
 
 
+
+
+
+
     # this is needed for the settings file parse to know which resources to extract
     def extractMovingResources(self, line):
         
@@ -142,6 +146,40 @@ class DAGModel :
 
 
 
+    def determineMakespan(self) : 
+        makespan = 0
+        for n in self.nodes : 
+            if len(n.dependenciesAbove) == 0 :
+                n.fire(0)
+        running = True
+        while running :
+            running = False
+            
+            for n in self.nodes : 
+
+                if not n.endTime == 0 :  # if the node has a endtime skip(continue) 
+                    continue
+
+                if n.endTime == 0 :# checks if one of the nodes isn't done yet if so we want another run
+                    running = True
+
+
+
+                fin = True
+                t = 0
+                for a in n.dependenciesAbove: 
+                    if a.endTime == 0 : 
+                        fin = False
+                    elif a.fired : 
+                        if t < a.endTime:
+                            t = a.endTime
+                
+                if fin : 
+                    n.fire(t)
+                    if makespan < n.endTime : 
+                        makespan = n.endTime
+                
+        return makespan
 
 
 
@@ -149,6 +187,7 @@ class DAGModel :
 
 
 
+    
     nodes = []
     routes = [] #empty
     startPoints = []
@@ -217,8 +256,6 @@ class Node :
         self.fired = True
         self.startTime = t
         self.endTime = t + self.duration*1000
-        print("nr: %s  end time: %s" %(self.nr, self.endTime))
-
 
     nr = 0
     moving = False
