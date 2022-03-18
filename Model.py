@@ -71,7 +71,6 @@ class Resource:
 
     name = ""
     axes = []
-    editable = False
 
 class AxisType(Enum): 
     X = 1

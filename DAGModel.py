@@ -1,5 +1,6 @@
 
 import copy
+from faulthandler import dump_traceback
 
 
 class DAGModel :
@@ -211,17 +212,32 @@ class Node :
     def addDependencyAbove (self, nr):
         self.dependenciesAbove.append(nr)
 
-    def test(self, str):
-        self.line = str
+# used when scheduling
+    def isDone(self, t):
+        if self.finished == True :
+            return True
+        if self.endTime == t: 
+            self.finished = True
+            return True
+        
+        return False
+
+    def fire(self,t) : 
+        self.startTime = t
+        self.endTime = t + self.duration
+
 
     nr = 0
     moving = False
-    duration = 0
-    startTime = 0
-    endTime = 0
     dependenciesBelow = [] #Outgoing arrows
     dependenciesAbove = [] #Incomming arrows
     line = ""
+
+# will be used when scheduling 
+    duration = 0
+    startTime = 0
+    endTime = 0
+    finished = False
 
 
     
