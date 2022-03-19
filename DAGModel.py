@@ -39,17 +39,23 @@ class DAGModel :
                 if 'X' in split[i]: 
                     s = split[i].split('=')
                     distance = int(s[1]) # distance the X axis moves in mm
-                    duration += distance / resource.getXVelocity()
+                    t = distance / resource.getXVelocity()
+                    if duration < t:
+                        duration = t
                 
                 elif 'Y' in split[i]: 
                     s = split[i].split('=')
                     distance = int(s[1]) # distance the Y axis moves in mm
-                    duration += distance / resource.getYVelocity()
+                    t = distance / resource.getYVelocity()
+                    if duration < t:
+                        duration = t
 
                 elif 'Z' in split[i]: 
                     s = split[i].split('=')
                     distance = int(s[1]) # distance the Z axis moves in mm
-                    duration += distance / resource.getZVelocity()
+                    t = distance / resource.getZVelocity()
+                    if duration < t:
+                        duration = t
 
 
                 i+=1

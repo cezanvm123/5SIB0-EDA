@@ -10,9 +10,34 @@ class RandomSolution :
         pass
 
     def solve(self, model, dag) : 
+        #self.sinSolve(model,dag)
+        self.realRandom(model,dag)
+    
+    def realRandom(self,model,dag) : 
+
+        iter = 100000
+
+        self.vel = model.getVelocityVector()
+        self.bestVel = [0] * len(self.vel)
+
+        i = 0
+        while i <= iter : 
+            seed(i/self.vel[0]*self.vel[len(self.vel)-1])
+            self.printProgressBar(i,iter)
+            v = 0 
+            while v <= len(self.vel)-1:
+                self.vel[v] = (random()*200) + 100
+                v+=1
+            
+            self.checkVelocities(model,dag)
+            i+=1
+
+
+
+    def sinSolve(self,model,dag) : 
         #Some magic numbers here
         iterations = 1000
-        changes = 10 #500
+        changes = 25 #500
         max = 300  #150
         min = 150
 
@@ -84,20 +109,20 @@ class RandomSolution :
         while i <= len(v)-1:
             v[i] = (random()*(u-l)) + l
             i+=1
-
+        #print(v)
         return v
 
     def checkVelocities(self, model, dag) : 
         model.setVelocityVector(self.vel)
-        dag.calcMovingNodeDurations(model)
+        
 
 
         cost = model.getMachineCost()
         if( cost > 100000) :
             return
-        
-        make = dag.determineMakespan()    
+        dag.calcMovingNodeDurations(model)
 
+        make = dag.determineMakespan()    
         if self.bestMake == 0 or make < self.bestMake : 
             self.bestVel = self.vel
             self.bestMake = make     

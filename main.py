@@ -8,6 +8,9 @@ import SettingFileParser
 dag = DAGModel("Input\DAG.txt")
 model = SettingFileParser.parseSettingFile(r"Input\xcps.setting", dag.getMovingResources(), "Input/costs.json")
 
+
+
+
 # This calculates the durations of the moving nodes, this can be done everytime the velocities are changed in the settingmodel\
 # It is a seperate function call as it needs the settingmodel to be initialized.
 dag.calcMovingNodeDurations(model)
@@ -17,13 +20,19 @@ print()
 print("Initial Machine cost is: %s euro" %(model.getMachineCost()))
 print("Initial Machine makespan is: %s ms" %(dag.determineMakespan()))
 
+
+
+
+
 #The first optimization solution
-print()
-print("Start random optimization:")
+print("\nStart random optimization:")
 randSol = RandomSolution()
 randSol.solve(model, dag)
-print()
-print("Random optimization makespan: %s at %s€" %(randSol.bestMake, randSol.cost))
-
+print("\nRandom optimization makespan: %s at %s€" %(randSol.bestMake, randSol.cost))
 print(randSol.bestVel)
+
+
+
+
+
 print("done")
