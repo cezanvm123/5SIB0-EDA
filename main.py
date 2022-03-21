@@ -23,7 +23,6 @@ print("Initial Machine makespan is: %s ms" %(dag.determineMakespan()))
 
 
 
-
 #The first optimization solution
 print("\nStart random optimization:")
 randSol = RandomSolution()

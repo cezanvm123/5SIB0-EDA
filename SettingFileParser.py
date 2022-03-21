@@ -192,7 +192,7 @@ def parseSettingFile(path, movingResources, CCPath):
 
               
 
-
+    
     print("Setting parse done")
     return model
 

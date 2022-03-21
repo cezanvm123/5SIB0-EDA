@@ -17,7 +17,7 @@ class DAGModel :
             self.extractDependency(l)
 
         print("DAG parse done")
-        print(self.movingResources)
+        #print(self.movingResources)
 
 
     def calcMovingNodeDurations(self, settingModel) :
@@ -275,7 +275,6 @@ class Node :
     duration = 0
     startTime = 0
     endTime = 0
-
     fired = False
 
 

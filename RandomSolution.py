@@ -15,7 +15,7 @@ class RandomSolution :
     
     def realRandom(self,model,dag) : 
 
-        iter = 100000
+        iter = 10000
 
         self.vel = model.getVelocityVector()
         self.bestVel = [0] * len(self.vel)
@@ -124,7 +124,7 @@ class RandomSolution :
 
         make = dag.determineMakespan()    
         if self.bestMake == 0 or make < self.bestMake : 
-            self.bestVel = self.vel
+            self.bestVel = self.vel.copy()
             self.bestMake = make     
             self.cost = cost           
 
