@@ -21,8 +21,13 @@ class DAGModel :
 
 
     def calcMovingNodeDurations(self, settingModel) :
+
+        self.gradient = [0]*(len(settingModel.getVelocityVector())+1)
+        gradconstidx = len(settingModel.getVelocityVector())
         for n in self.nodes :
             if n.moving == False :
+                n.gradi = gradconstidx
+                n.grad = n.duration
                 continue
 
             resource = settingModel.getResourceByLine(n.line)
@@ -42,6 +47,9 @@ class DAGModel :
                     t = distance / resource.getXVelocity()
                     if duration < t:
                         duration = t
+                        n.gradi = settingModel.getGradientIndex(resource,1)
+                        n.grad = distance
+
                 
                 elif 'Y' in split[i]: 
                     s = split[i].split('=')
@@ -49,6 +57,8 @@ class DAGModel :
                     t = distance / resource.getYVelocity()
                     if duration < t:
                         duration = t
+                        n.gradi = settingModel.getGradientIndex(resource,2)
+                        n.grad = distance
 
                 elif 'Z' in split[i]: 
                     s = split[i].split('=')
@@ -56,16 +66,14 @@ class DAGModel :
                     t = distance / resource.getZVelocity()
                     if duration < t:
                         duration = t
+                        n.gradi = settingModel.getGradientIndex(resource,3)
+                        n.grad = distance
 
 
                 i+=1
             
             n.duration = duration
         
-
-
-
-
 
 
     # this is needed for the settings file parse to know which resources to extract
@@ -158,13 +166,14 @@ class DAGModel :
     def determineMakespan(self) : 
         self.resetTimes()
         makespan = 0
+        prevn = 0
+        self.critpath = []
         for n in self.nodes : 
             if len(n.dependenciesAbove) == 0 :
                 n.fire(0)
         running = True
         while running :
             running = False
-            
             for n in self.nodes : 
 
                 if not n.endTime == 0 :  # if the node has a endtime skip(continue) 
@@ -181,26 +190,38 @@ class DAGModel :
                     elif a.fired : 
                         if t < a.endTime:
                             t = a.endTime
+                            n.prev = a     # For construction of critical path, used for gradient
                 
                 if fin : 
                     n.fire(t)
                     if makespan < n.endTime : 
                         makespan = n.endTime
-                
+                        prevn = n
+
+        while not prevn == 0:   # Constructs critical path
+            self.critpath.append(prevn)
+            prevn = prevn.prev
+
+        self.updateGradient()
+
         return makespan
 
+    def updateGradient(self):
+        for n in self.critpath:
+            self.gradient[n.gradi] = self.gradient[n.gradi] + n.grad
 
 
+    def getGradient(self):
+        return self.gradient[:len(self.gradient)-1], self.gradient[-1]
 
 
-
-
-    
+    gradient = []
     nodes = []
     routes = [] #empty
     startPoints = []
     endPoints = []
     movingResources = []
+    critpath = []
     
 
 
@@ -238,6 +259,9 @@ class Node :
         self.dependenciesBelow = []
         self.dependenciesAbove = []
 
+        self.gradi = 0
+        self.grad = 0
+
         if "move" in line : 
             self.moving = True
         else :
@@ -267,6 +291,7 @@ class Node :
 
     nr = 0
     moving = False
+    prev = 0
     dependenciesBelow = [] #Outgoing arrows
     dependenciesAbove = [] #Incomming arrows
     line = ""
@@ -277,6 +302,3 @@ class Node :
     endTime = 0
 
     fired = False
-
-
-    

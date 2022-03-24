@@ -51,7 +51,20 @@ class Model:
             for a in r.axes : 
                 a.setVelocity(v[i])
                 i+=1
-        
+
+
+    def getGradientIndex(self, resource, axes):
+        i = 0
+        for r in self.resources :
+            for a in r.axes :
+                if(r == resource):
+                    if axes ==1 and a.type==AxisType.X :
+                        return i
+                    elif axes ==2 and a.type==AxisType.Y :
+                        return i
+                    elif axes ==3 and a.type==AxisType.Z :
+                        return i
+                i+=1
         
     resources = []
     
