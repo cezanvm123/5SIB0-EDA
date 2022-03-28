@@ -6,6 +6,7 @@ import numpy as np
 import time
 
 
+
 class GradientDescent:
 
     def __init__(self) -> None:
@@ -24,6 +25,7 @@ class GradientDescent:
 
         i = 0
         while i <= iter:
+            self.printProgressBar(i, iter)
             seed(time.time()*i/1000)
             v = 0
             while v <= len(self.vel) - 1:

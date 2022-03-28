@@ -15,7 +15,7 @@ class RandomSolution :
     
     def realRandom(self,model,dag) : 
 
-        iter = 1000
+        iter = 100
 
         self.vel = model.getVelocityVector()
         self.bestVel = [0] * len(self.vel)
