@@ -48,7 +48,7 @@ if gradientTest :
 
 if gradientMTTest : 
     if __name__ == '__main__':
-        GradientDescentMT.gradientMTsolve(model, dag, 15)
+        GradientDescentMT.gradientMTsolve(model, dag, 5)
 
 
 print("done")

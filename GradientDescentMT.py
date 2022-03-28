@@ -18,8 +18,8 @@ from multiprocessing import Process
 
 from pkg_resources import ResolutionError
 
-from DAGModel import DAGModel
-import SettingFileParser
+
+import datetime
 
 def gradientMTsolve(model, dag, t) :
     
@@ -80,7 +80,7 @@ def gradientMTsolve(model, dag, t) :
 
 def worker(model, dag, j, p):
     print("Worker %s started work" %(j))
-    iter = 1000
+    iter = 100
     minvel = [140, 100, 240, 140, 140, 140, 140, 140, 140]
 
     vel = []
@@ -128,14 +128,14 @@ def worker(model, dag, j, p):
 
 def gradientDescent(model, dag, vel, bestVel):
     maxcost = 100000
-    iterations = 300000
+    iterations = 3000
     model.setVelocityVector(vel)
     cost = model.getMachineCost()
     if cost > maxcost:  # Checking cost constraint, done here to prevent errors instead of using the loop constraint
         return
 
     k = 0
-    lr = 1
+    lr = 5
     prevcost = 0
     prevvel = []
     dag.calcMovingNodeDurations(model)
@@ -148,20 +148,39 @@ def gradientDescent(model, dag, vel, bestVel):
 
 
     # Gradient descent loop
+    
     while not (cost > maxcost or k >= iterations):
+        w = datetime.datetime.now()
         if k % 10 == 0: 
             lr *0.9
+        a = datetime.datetime.now()    
         dag.calcMovingNodeDurations(model)
+        b = datetime.datetime.now()
         make = dag.determineMakespan()
+        c = datetime.datetime.now()
+
         gradient = dag.getGradient()[0]
+
+
         prevvel = vel
         vel = vel + np.divide(gradient, np.square(vel))*lr
+        
+        e = datetime.datetime.now()
         model.setVelocityVector(vel)
+        f = datetime.datetime.now()
+        
+        
         prevcost = cost
         cost = model.getMachineCost()
         k+=1
-        if cost > maxcost : 
-            print("cost exceeded at iteration: %s" %(k))
+        
+        d = datetime.datetime.now()
+
+
+        whi = d - w
+        da = b - a 
+        ma = c - b
+        ve = f - e
 
     if bestMake == 0 or make < bestMake:
         bestVel = prevvel.copy()
