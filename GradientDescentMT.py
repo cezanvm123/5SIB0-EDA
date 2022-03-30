@@ -79,7 +79,7 @@ def gradientMTsolve(model, dag, t) :
 
 def worker(model, dag, j, p):
     print("Worker %s started work" %(j))
-    iter = 2
+    iter = 1000
     minvel = [140, 100, 240, 140, 140, 140, 140, 140, 140]
 
     vel = []
@@ -101,12 +101,12 @@ def worker(model, dag, j, p):
         random.seed(a=None, version=2)
         v = 0
         while v <= len(vel) - 1:
-            vel[v] = (random.random() * 100) + minvel[v]
+            vel[v] = (random.random() * 150) + minvel[v]
             v += 1
 
         t = gradientDescent(model, dag, vel, bestVel)
 
-        if t == None : # I think this means that the cost > maxcost if so go again
+        if t == None : # I think this means that the cost > maxcost before the gradient if so go again
             continue
 
         if  result.makespan == 0 or t.makespan <  result.makespan:
@@ -114,7 +114,7 @@ def worker(model, dag, j, p):
             result.cost = t.cost
             result.velocities = t.velocities.copy()
         i += 1
-        print("succes")
+        #print("succes")
     
     data = {}
     data['makespan'] = result.makespan
@@ -128,14 +128,14 @@ def worker(model, dag, j, p):
 
 def gradientDescent(model, dag, vel, bestVel):
     maxcost = 100000
-    iterations = 50000
+    iterations = 3000
     model.setVelocityVector(vel)
     cost = model.getMachineCost()
     if cost > maxcost:  # Checking cost constraint, done here to prevent errors instead of using the loop constraint
         return
 
     k = 0
-    lr = 5
+    lr = 10
     prevcost = 0
     prevvel = []
     dag.calcMovingNodeDurations(model)
@@ -151,12 +151,12 @@ def gradientDescent(model, dag, vel, bestVel):
     
     while not (cost > maxcost or k >= iterations):
         
-        if k > 50 and make > 58500 and cost/maxcost > 0.90 :
-           # print("returning")
-            return
+        # if k > 50 and make > 58500 and cost/maxcost > 0.90 :
+        #    # print("returning")
+        #     return
         
         #w = datetime.datetime.now()
-        lr = 10 * (1 - cost/maxcost) +0.1
+      #  lr = 10 * (1 - cost/maxcost) +0.1
         #a = datetime.datetime.now()    
         dag.calcMovingNodeDurations(model)
         #b = datetime.datetime.now()

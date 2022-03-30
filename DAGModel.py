@@ -164,7 +164,7 @@ class DAGModel :
             n.startTime = 0
             n.endTime = 0
 
-    def determineMakespan(self) : 
+    def determineMakespanInit(self) : 
         self.resetTimes()
         makespan = 0
         prevn = 0
@@ -172,6 +172,7 @@ class DAGModel :
         for n in self.nodes : 
             if len(n.dependenciesAbove) == 0 :
                 n.fire(0)
+                self.makespanOrder.append(n)
         running = True
         while running :
             running = False
@@ -195,6 +196,7 @@ class DAGModel :
                 
                 if fin : 
                     n.fire(t)
+                    self.makespanOrder.append(n)
                     if makespan < n.endTime : 
                         makespan = n.endTime
                         prevn = n
@@ -207,6 +209,42 @@ class DAGModel :
 
         return makespan
 
+    def determineMakespan(self) : 
+        if len(self.makespanOrder) == 0: 
+            return self.determineMakespanInit()
+
+        self.resetTimes()
+        makespan = 0
+        prevn = 0
+        self.critpath = []
+
+        for n in self.makespanOrder : 
+            fin = True
+            t = 0
+            for a in n.dependenciesAbove: 
+                if a.endTime == 0 : 
+                    fin = False
+                    print("order failed...")
+                elif a.fired : 
+                    if t < a.endTime:
+                        t = a.endTime
+                        n.prev = a     # For construction of critical path, used for gradient
+                
+            if fin : 
+                n.fire(t)
+                if makespan < n.endTime : 
+                    makespan = n.endTime
+                    prevn = n
+        while not prevn == 0:   # Constructs critical path
+            self.critpath.append(prevn)
+            prevn = prevn.prev
+
+        self.updateGradient()
+
+        return makespan
+    
+
+
     def updateGradient(self):
         for n in self.critpath:
             self.gradient[n.gradi] = self.gradient[n.gradi] + n.grad
@@ -216,6 +254,7 @@ class DAGModel :
         return self.gradient[:len(self.gradient)-1], self.gradient[-1]
 
 
+    makespanOrder = []
     gradient = []
     nodes = []
     routes = [] #empty

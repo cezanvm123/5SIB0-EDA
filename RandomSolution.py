@@ -14,8 +14,8 @@ class RandomSolution :
         self.realRandom(model,dag)
     
     def realRandom(self,model,dag) : 
-
-        iter = 100
+        minvel = [140, 100, 240, 140, 140, 140, 140, 140, 140]
+        iter = 100000
 
         self.vel = model.getVelocityVector()
         self.bestVel = [0] * len(self.vel)
@@ -26,11 +26,12 @@ class RandomSolution :
             self.printProgressBar(i,iter)
             v = 0 
             while v <= len(self.vel)-1:
-                self.vel[v] = (random()*200) + 100
+                self.vel[v] = (random()*200) + minvel[v]
                 v+=1
 
             self.checkVelocities(model,dag)
             i+=1
+
 
 
 
