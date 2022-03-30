@@ -1,5 +1,7 @@
 from DAGModel import DAGModel
+import GradientDescentMT 
 from RandomSolution import RandomSolution
+from GradientDescentSolver import GradientDescent
 import SettingFileParser
 
 
@@ -8,6 +10,9 @@ import SettingFileParser
 dag = DAGModel("Input\DAG.txt")
 model = SettingFileParser.parseSettingFile(r"Input\xcps.setting", dag.getMovingResources(), "Input/costs.json")
 
+randomTest = 0
+gradientTest = 0
+gradientMTTest = 0
 
 
 
@@ -19,19 +24,31 @@ print()
 # !!!! if the velocities are changed calcMovingDurations HAS TO BE CALLED
 print("Initial Machine cost is: %s euro" %(model.getMachineCost()))
 print("Initial Machine makespan is: %s ms" %(dag.determineMakespan()))
+print("Initial Gradient is: %s " %(dag.getGradient()[0]))
 
 
 
+if randomTest :
+    #The first optimization solution
+    print("\nStart random optimization:")
+    randSol = RandomSolution()
+    randSol.solve(model, dag)
+    print("\nRandom optimization makespan: %s at %s€" %(randSol.bestMake, randSol.cost))
+    print(randSol.bestVel)
+    print("Best Gradient is: %s " %(dag.getGradient()[0]))
 
-#The first optimization solution
-print("\nStart random optimization:")
-randSol = RandomSolution()
-randSol.solve(model, dag)
-print("\nRandom optimization makespan: %s at %s€" %(randSol.bestMake, randSol.cost))
-print(randSol.bestVel)
+if gradientTest : 
+    # #Gradient descent optimization solution
+    print("\nStart gradient descent optimization:")
+    gradDescSol = GradientDescent()
+    gradDescSol.solve(model, dag)
+    print("\nGradient Descent optimization makespan: %s at %s€" %(gradDescSol.bestMake, gradDescSol.cost))
+    print(gradDescSol.bestVel)
+    print("Best Gradient is: %s \n\n\n" %(dag.getGradient()[0]))
 
-
-
+if gradientMTTest : 
+    if __name__ == '__main__':
+        GradientDescentMT.gradientMTsolve(model, dag, 2)
 
 
 print("done")
