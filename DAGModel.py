@@ -282,8 +282,6 @@ class Route :
     def addNode(self, n) :
         self.nodes.append(n)
     
-    def calculateValues(self) : 
-        print("Calculating biep bop")
 
     duration = 0
     movingPercentage = 0
