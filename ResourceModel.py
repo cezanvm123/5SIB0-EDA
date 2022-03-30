@@ -2,7 +2,7 @@ from enum import Enum
 from tkinter.messagebox import RETRY
 from turtle import position
 
-class Model: 
+class ResourceModel: 
      
     def __init__(self) :
         self.resources = []

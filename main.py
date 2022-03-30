@@ -8,41 +8,40 @@ import SettingFileParser
 
 #numpy probably for math 
 
+randomTest = 1
+gradientTest = 1
+gradientMTTest = 1
+
+
+
 dag = DAGModel("Input\DAG.txt")
 model = SettingFileParser.parseSettingFile(r"Input\xcps.setting", dag.getMovingResources(), "Input/costs.json")
-
-randomTest = 1
-gradientTest = 0
-gradientMTTest = 0
-
-
-
 # This calculates the durations of the moving nodes, this can be done everytime the velocities are changed in the settingmodel\
 # It is a seperate function call as it needs the settingmodel to be initialized.
 dag.calcMovingNodeDurations(model)
 print()
 # costs and makespan can only be determined after calcMovingDurations.
 # !!!! if the velocities are changed calcMovingDurations HAS TO BE CALLED
-print("Initial Machine cost is: %s euro" %(model.getMachineCost()))
-print("Initial Machine makespan is: %s ms" %(dag.determineMakespan()))
-print("Initial Gradient is: %s " %(dag.getGradient()[0]))
+if __name__ == '__main__':
+    print("Initial Machine cost is: %s euro" %(model.getMachineCost()))
+    print("Initial Machine makespan is: %s ms" %(dag.determineMakespan()))
+    print("Initial Gradient is: %s " %(dag.getGradient()[0]))
+
+if gradientMTTest and __name__ == '__main__':
+    
+        processes = 15
+        gradientMTStart = datetime.datetime.now()
+        GradientDescentMT.gradientMTsolve(model, dag, processes)
+        gradientMTStop = datetime.datetime.now()
+        
+        gradientMTDelta = gradientMTStop - gradientMTStart
+
+        print("Gradient descent multiprocess with process count: %s took: %s s" %(processes, gradientMTDelta.seconds))
 
 
 
-if randomTest :
-    #The first optimization solution
-    print("\nStart random optimization:")
-    randomStart = datetime.datetime.now()
-    randSol = RandomSolution()
-    randSol.solve(model, dag)
-    randomStop = datetime.datetime.now()
-    print("\nRandom optimization makespan: %s at %s€" %(randSol.bestMake, randSol.cost))
-    print(randSol.bestVel)
-    print("Best Gradient is: %s " %(dag.getGradient()[0]))
-    randomDelta = randomStop - randomStart
-    print ("Random optimization took: %s s" %(randomDelta.seconds))
 
-if gradientTest : 
+if gradientTest and  __name__ == '__main__':
     # #Gradient descent optimization solution
     print("\nStart gradient descent optimization:")
     gradientStart = datetime.datetime.now()
@@ -58,17 +57,18 @@ if gradientTest :
 
 
 
-
-if gradientMTTest : 
-    if __name__ == '__main__':
-        processes = 15
-        gradientMTStart = datetime.datetime.now()
-        GradientDescentMT.gradientMTsolve(model, dag, processes)
-        gradientMTStop = datetime.datetime.now()
-        
-        gradientMTDelta = gradientMTStop - gradientMTStart
-
-        print("Gradient descent multiprocess with process count: %s took: %s s" %(processes, gradientMTDelta.seconds))
+if randomTest and  __name__ == '__main__':
+    #The first optimization solution
+    print("\nStart random optimization:")
+    randomStart = datetime.datetime.now()
+    randSol = RandomSolution()
+    randSol.solve(model, dag)
+    randomStop = datetime.datetime.now()
+    print("\nRandom optimization makespan: %s at %s€" %(randSol.bestMake, randSol.cost))
+    print(randSol.bestVel)
+    print("Best Gradient is: %s " %(dag.getGradient()[0]))
+    randomDelta = randomStop - randomStart
+    print ("Random optimization took: %s s" %(randomDelta.seconds))
 
 
 print("done")

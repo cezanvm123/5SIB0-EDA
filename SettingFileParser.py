@@ -1,7 +1,7 @@
 from enum import Enum
 from operator import mod
 from pickle import GLOBAL
-from Model import Axis, AxisType, Resource, Model
+from ResourceModel import Axis, AxisType, Resource, ResourceModel
 import string
 import json
 
@@ -17,7 +17,7 @@ class SearchState(Enum):
 
 def parseSettingFile(path, movingResources, CCPath):
     print("Parsing setting file")
-    model = Model()
+    model = ResourceModel()
     running = False
     state = SearchState.GLOBAL
 
