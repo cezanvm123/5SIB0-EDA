@@ -10,9 +10,9 @@ import SettingFileParser
 dag = DAGModel("Input\DAG.txt")
 model = SettingFileParser.parseSettingFile(r"Input\xcps.setting", dag.getMovingResources(), "Input/costs.json")
 
-randomTest = False
-gradientTest = False
-gradientMTTest = True
+randomTest = 0
+gradientTest = 0
+gradientMTTest = 0
 
 
 
@@ -48,7 +48,7 @@ if gradientTest :
 
 if gradientMTTest : 
     if __name__ == '__main__':
-        GradientDescentMT.gradientMTsolve(model, dag, 5)
+        GradientDescentMT.gradientMTsolve(model, dag, 2)
 
 
 print("done")

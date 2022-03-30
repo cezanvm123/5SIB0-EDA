@@ -3,8 +3,7 @@ from dataclasses import dataclass
 import json
 import multiprocessing
 from multiprocessing.dummy import Array
-from random import seed
-from random import random
+import random
 import math
 import sys
 from tokenize import String
@@ -80,7 +79,7 @@ def gradientMTsolve(model, dag, t) :
 
 def worker(model, dag, j, p):
     print("Worker %s started work" %(j))
-    iter = 100
+    iter = 2
     minvel = [140, 100, 240, 140, 140, 140, 140, 140, 140]
 
     vel = []
@@ -99,10 +98,10 @@ def worker(model, dag, j, p):
     while i <= iter:
         #if j == 0 :
           #  print("Worker %s at i: %s" %(j, i))
-        seed(time.time()*i/1000)
+        random.seed(a=None, version=2)
         v = 0
         while v <= len(vel) - 1:
-            vel[v] = (random() * 100) + minvel[v]
+            vel[v] = (random.random() * 100) + minvel[v]
             v += 1
 
         t = gradientDescent(model, dag, vel, bestVel)
@@ -115,6 +114,7 @@ def worker(model, dag, j, p):
             result.cost = t.cost
             result.velocities = t.velocities.copy()
         i += 1
+        print("succes")
     
     data = {}
     data['makespan'] = result.makespan
@@ -128,7 +128,7 @@ def worker(model, dag, j, p):
 
 def gradientDescent(model, dag, vel, bestVel):
     maxcost = 100000
-    iterations = 3000
+    iterations = 50000
     model.setVelocityVector(vel)
     cost = model.getMachineCost()
     if cost > maxcost:  # Checking cost constraint, done here to prevent errors instead of using the loop constraint
@@ -150,14 +150,18 @@ def gradientDescent(model, dag, vel, bestVel):
     # Gradient descent loop
     
     while not (cost > maxcost or k >= iterations):
-        w = datetime.datetime.now()
-        if k % 10 == 0: 
-            lr *0.9
-        a = datetime.datetime.now()    
+        
+        if k > 50 and make > 58500 and cost/maxcost > 0.90 :
+           # print("returning")
+            return
+        
+        #w = datetime.datetime.now()
+        lr = 10 * (1 - cost/maxcost) +0.1
+        #a = datetime.datetime.now()    
         dag.calcMovingNodeDurations(model)
-        b = datetime.datetime.now()
+        #b = datetime.datetime.now()
         make = dag.determineMakespan()
-        c = datetime.datetime.now()
+       # c = datetime.datetime.now()
 
         gradient = dag.getGradient()[0]
 
@@ -165,22 +169,22 @@ def gradientDescent(model, dag, vel, bestVel):
         prevvel = vel
         vel = vel + np.divide(gradient, np.square(vel))*lr
         
-        e = datetime.datetime.now()
+       # e = datetime.datetime.now()
         model.setVelocityVector(vel)
-        f = datetime.datetime.now()
+       # f = datetime.datetime.now()
         
         
         prevcost = cost
         cost = model.getMachineCost()
         k+=1
         
-        d = datetime.datetime.now()
+      #  d = datetime.datetime.now()
 
 
-        whi = d - w
-        da = b - a 
-        ma = c - b
-        ve = f - e
+        # whi = d - w
+        # da = b - a 
+        # ma = c - b
+        # ve = f - e
 
     if bestMake == 0 or make < bestMake:
         bestVel = prevvel.copy()
@@ -192,6 +196,7 @@ def gradientDescent(model, dag, vel, bestVel):
     r.velocities = copy.copy(bestVel)
     r.cost = copy.copy(cost)
 
+    
     return r
 
 
